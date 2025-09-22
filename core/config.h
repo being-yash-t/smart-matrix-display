@@ -44,17 +44,17 @@ public:
         static const int RED_G = 0;
         static const int RED_B = 0;
         
-        // Border colors (reduced brightness)
-        static const int BORDER_GREY_R = 120;    // Reduced from 200
-        static const int BORDER_GREY_G = 120;    // Reduced from 200
-        static const int BORDER_GREY_B = 120;    // Reduced from 200
+        // Border colors (inherently dimmer, not affected by main brightness)
+        static const int BORDER_GREY_R = 100;    // Even more reduced
+        static const int BORDER_GREY_G = 100;    // Even more reduced
+        static const int BORDER_GREY_B = 100;    // Even more reduced
         
-        static const int BORDER_YELLOW_R = 200;  // Reduced from 255
-        static const int BORDER_YELLOW_G = 200;  // Reduced from 255
+        static const int BORDER_YELLOW_R = 150;  // Even more reduced
+        static const int BORDER_YELLOW_G = 150;  // Even more reduced
         static const int BORDER_YELLOW_B = 0;
         
-        static const int BORDER_ORANGE_R = 200;  // Reduced from 255
-        static const int BORDER_ORANGE_G = 100;  // Reduced from 165
+        static const int BORDER_ORANGE_R = 180;  // Slightly reduced
+        static const int BORDER_ORANGE_G = 80;   // More reduced
         static const int BORDER_ORANGE_B = 0;
         
         static const int BORDER_RED_R = 255;

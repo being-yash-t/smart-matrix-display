@@ -3,7 +3,7 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
-#include "config.h"
+#include "../core/config.h"
 #include <string>
 
 using namespace rgb_matrix;
@@ -26,12 +26,14 @@ private:
     void drawText(int dbValue, int componentStartY);
     void drawProgressBar(int dbValue, int componentStartY);
     void drawBorder(int dbValue, bool shouldShow);
+    void drawBarSegment(int startX, int startY, int width, int r, int g, int b);
     
     // Helper methods
     int getComponentStartY() const;
     bool shouldBlink(int dbValue) const;
     void getBorderColor(int dbValue, int& r, int& g, int& b) const;
     int scaleBrightness(int color) const;
+    void loadFonts();
     
     // Member variables
     RGBMatrix* matrix_;

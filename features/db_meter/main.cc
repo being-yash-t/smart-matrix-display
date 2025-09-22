@@ -1,5 +1,5 @@
 #include "db_meter_app.h"
-#include "arg_parser.h"
+#include "../../core/arg_parser.h"
 #include <iostream>
 
 int main(int argc, char **argv) {
@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     DbMeterApp app(parser.getBrightness());
     
     if (!app.initialize()) {
-        std::cerr << "Failed to initialize application" << std::endl;
+        std::cerr << "\033[0;31m❌ Failed to initialize application\033[0m" << std::endl;
         return 1;
     }
     

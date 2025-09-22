@@ -1,14 +1,18 @@
-# Makefile for dB Meter Application
+# Makefile for LED Matrix Applications
 
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -O2
-INCLUDES = -I/usr/local/include
-LIBS = -L/usr/local/lib -lrgbmatrix -lrt -lm -lpthread
+CXXFLAGS = -std=c++11 -Wall -Wextra -O3 -pthread
+INCLUDES = -I../../include -I.
+LIBS = ../../lib/librgbmatrix.a -lrt -lm -lpthread
 
-# Source files
-SOURCES = main_new.cc db_meter_app.cpp db_display.cpp input_handler.cpp blink_manager.cpp
-OBJECTS = $(SOURCES:.cc=.o) $(SOURCES:.cpp=.o)
+# Source files (organized structure)
+CORE_SOURCES = core/config.cpp core/arg_parser.cpp core/input_handler.cpp core/blink_manager.cpp
+DISPLAY_SOURCES = display/db_display.cpp
+DB_METER_SOURCES = features/db_meter/main.cc features/db_meter/db_meter_app.cpp
+
+ALL_SOURCES = $(CORE_SOURCES) $(DISPLAY_SOURCES) $(DB_METER_SOURCES)
+OBJECTS = $(ALL_SOURCES:.cc=.o) $(ALL_SOURCES:.cpp=.o)
 TARGET = db_meter
 
 # Default target

@@ -4,13 +4,13 @@
 
 ### Build and Run (One Command)
 ```bash
-./build.sh
+./build.sh -r
 ```
 This will compile the application and run it immediately.
 
 ### Build Only
 ```bash
-./build_only.sh
+./build.sh
 ```
 This will compile the application without running it.
 
@@ -53,23 +53,37 @@ This will run the pre-built executable.
 
 If you prefer to compile manually:
 ```bash
-g++ -O3 -Wall -pthread -I../../include -I. -o db_meter main_clean.cc db_meter_app_new.cpp db_display_new.cpp input_handler.cpp blink_manager.cpp config.cpp arg_parser.cpp ../../lib/librgbmatrix.a -lrt -lm && sudo ./db_meter
+g++ -O3 -Wall -pthread -I../../include -I. -o db_meter \
+    features/db_meter/main.cc \
+    features/db_meter/db_meter_app.cpp \
+    display/db_display.cpp \
+    core/input_handler.cpp \
+    core/blink_manager.cpp \
+    core/config.cpp \
+    core/arg_parser.cpp \
+    ../../lib/librgbmatrix.a -lrt -lm && sudo ./db_meter
 ```
 
 ## File Structure
 
-### Core Components
-- **`main_clean.cc`** - Main entry point with argument parsing
-- **`db_meter_app_new.cpp/.h`** - Main application class that coordinates everything
-- **`db_display_new.cpp/.h`** - Handles all display rendering (text, progress bar, border)
-- **`input_handler.cpp/.h`** - Manages non-blocking input from stdin
-- **`blink_manager.cpp/.h`** - Manages border blinking states
-- **`config.cpp/.h`** - Configuration constants and settings
-- **`arg_parser.cpp/.h`** - Command line argument parsing
+### Organized Structure
+```
+├── core/                    # Reusable core components
+│   ├── config.h/.cpp       # Configuration constants
+│   ├── arg_parser.h/.cpp   # Command line parsing
+│   ├── input_handler.h/.cpp # Input management
+│   └── blink_manager.h/.cpp # Blink state management
+│
+├── display/                 # Display rendering
+│   └── db_display.h/.cpp   # Display engine
+│
+└── features/db_meter/      # dB Meter application
+    ├── main.cc             # Entry point
+    └── db_meter_app.h/.cpp # Main application class
+```
 
 ### Build Scripts
-- **`build.sh`** - Build and run in one command
-- **`build_only.sh`** - Build only
+- **`build.sh`** - Unified build script (use `-r` to run after build)
 - **`run.sh`** - Run pre-built executable
 - **`Makefile`** - Alternative build system
 

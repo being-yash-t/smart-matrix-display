@@ -2,14 +2,28 @@
 
 # Run script for dB Meter Application
 
+# Color definitions
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
 TARGET="db_meter"
 
 # Check if executable exists
 if [ ! -f "$TARGET" ]; then
-    echo "Executable $TARGET not found!"
-    echo "Please run ./build_only.sh first to build the application."
+    echo -e "${RED}${BOLD}❌ Executable $TARGET not found!${NC}"
+    echo -e "${YELLOW}💡 Please run ${BOLD}./build.sh${NC} ${YELLOW}first to build the application.${NC}"
+    echo -e "${BLUE}💡 Or use ${BOLD}./build.sh -r${NC} ${BLUE}to build and run in one command.${NC}"
     exit 1
 fi
 
-echo "Running dB Meter Application..."
+echo -e "${PURPLE}${BOLD}🚀 Running dB Meter Application...${NC}"
+echo -e "${YELLOW}💡 Press Ctrl+C to exit${NC}"
+echo ""
 sudo ./$TARGET

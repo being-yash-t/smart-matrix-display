@@ -36,7 +36,11 @@ void DbDisplay::clearAndRedraw(int dbValue, int componentStartY) {
 void DbDisplay::drawText(int dbValue, int componentStartY) {
     if (!fontsLoaded_) return;
     
-    rgb_matrix::Color white(Config::Colors::TEXT_R, Config::Colors::TEXT_G, Config::Colors::TEXT_B);
+    // Apply brightness scaling to text colors
+    int textR = scaleBrightness(Config::Colors::TEXT_R);
+    int textG = scaleBrightness(Config::Colors::TEXT_G);
+    int textB = scaleBrightness(Config::Colors::TEXT_B);
+    rgb_matrix::Color white(textR, textG, textB);
     
     // Position text to align with progress bar (left-aligned)
     int textX = Config::BORDER_THICKNESS + Config::PADDING;
@@ -64,18 +68,27 @@ void DbDisplay::drawProgressBar(int dbValue, int componentStartY) {
     // Draw green segment (0-80dB)
     if (totalFill > 0) {
         int greenFill = (totalFill > greenEnd) ? greenEnd : totalFill;
-        drawBarSegment(startX, startY, greenFill, Config::Colors::GREEN_R, Config::Colors::GREEN_G, Config::Colors::GREEN_B);
+        int greenR = scaleBrightness(Config::Colors::GREEN_R);
+        int greenG = scaleBrightness(Config::Colors::GREEN_G);
+        int greenB = scaleBrightness(Config::Colors::GREEN_B);
+        drawBarSegment(startX, startY, greenFill, greenR, greenG, greenB);
     }
     
     // Draw yellow segment (80-95dB)
     if (totalFill > greenEnd) {
         int yellowFill = (totalFill > yellowEnd) ? yellowEnd : totalFill;
-        drawBarSegment(startX + greenEnd, startY, yellowFill - greenEnd, Config::Colors::YELLOW_R, Config::Colors::YELLOW_G, Config::Colors::YELLOW_B);
+        int yellowR = scaleBrightness(Config::Colors::YELLOW_R);
+        int yellowG = scaleBrightness(Config::Colors::YELLOW_G);
+        int yellowB = scaleBrightness(Config::Colors::YELLOW_B);
+        drawBarSegment(startX + greenEnd, startY, yellowFill - greenEnd, yellowR, yellowG, yellowB);
     }
     
     // Draw red segment (95dB+)
     if (totalFill > yellowEnd) {
-        drawBarSegment(startX + yellowEnd, startY, totalFill - yellowEnd, Config::Colors::RED_R, Config::Colors::RED_G, Config::Colors::RED_B);
+        int redR = scaleBrightness(Config::Colors::RED_R);
+        int redG = scaleBrightness(Config::Colors::RED_G);
+        int redB = scaleBrightness(Config::Colors::RED_B);
+        drawBarSegment(startX + yellowEnd, startY, totalFill - yellowEnd, redR, redG, redB);
     }
 }
 
@@ -93,10 +106,7 @@ void DbDisplay::drawBorder(int dbValue, bool shouldShow) {
     int r, g, b;
     getBorderColor(dbValue, r, g, b);
     
-    // Scale border colors by brightness
-    r = scaleBrightness(r);
-    g = scaleBrightness(g);
-    b = scaleBrightness(b);
+    // Border colors are already inherently dimmer, no additional brightness scaling
     
     int rows = offscreen_->height();
     int cols = offscreen_->width();
