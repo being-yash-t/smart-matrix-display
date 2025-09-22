@@ -4,6 +4,7 @@
 #include "led-matrix.h"
 #include "graphics.h"
 #include "../core/config.h"
+#include "border_renderer.h"
 #include <string>
 
 using namespace rgb_matrix;
@@ -20,18 +21,20 @@ public:
     int getBlinkDuration(int dbValue) const;
     void setBrightness(int brightnessLevel);
     
+    // Border control
+    void enableBorder(bool enable = true);
+    void disableBorder();
+    bool isBorderEnabled() const;
+    
 private:
     // Drawing methods
     void clearAndRedraw(int dbValue, int componentStartY);
     void drawText(int dbValue, int componentStartY);
     void drawProgressBar(int dbValue, int componentStartY);
-    void drawBorder(int dbValue, bool shouldShow);
     void drawBarSegment(int startX, int startY, int width, int r, int g, int b);
     
     // Helper methods
     int getComponentStartY() const;
-    bool shouldBlink(int dbValue) const;
-    void getBorderColor(int dbValue, int& r, int& g, int& b) const;
     int scaleBrightness(int color) const;
     void loadFonts();
     
@@ -40,11 +43,15 @@ private:
     FrameCanvas* offscreen_;
     int brightnessLevel_;
     int brightnessScale_;
+    bool fontsLoaded_;
+    bool borderEnabled_;
+    
+    // Components
+    BorderRenderer borderRenderer_;
     
     // Fonts (cached for performance)
     rgb_matrix::Font largeFont_;
     rgb_matrix::Font smallFont_;
-    bool fontsLoaded_;
 };
 
 #endif // DB_DISPLAY_H

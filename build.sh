@@ -39,7 +39,7 @@ INCLUDES="-I../../include -I."
 LIBS="../../lib/librgbmatrix.a -lrt -lm"
 
 # Source files (organized modular structure)
-SOURCES="features/db_meter/main.cc features/db_meter/db_meter_app.cpp display/db_display.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp"
+SOURCES="features/db_meter/main.cc features/db_meter/db_meter_app.cpp display/db_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp"
 
 # Output executable
 TARGET="db_meter"
