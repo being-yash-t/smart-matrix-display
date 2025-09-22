@@ -15,15 +15,15 @@ YoutubeDisplay::~YoutubeDisplay() {
     // FrameCanvas is managed by the matrix, no need to delete
 }
 
-void YoutubeDisplay::update(int subscriberCount) {
+void YoutubeDisplay::update(const std::string& text) {
     // Clear and redraw everything
-    clearAndRedraw(subscriberCount);
+    clearAndRedraw(text);
     
     // Swap the offscreen canvas with the visible one (double buffering)
     offscreen_ = matrix_->SwapOnVSync(offscreen_);
 }
 
-void YoutubeDisplay::clearAndRedraw(int subscriberCount) {
+void YoutubeDisplay::clearAndRedraw(const std::string& text) {
     offscreen_->Clear();
     
     int centerX = offscreen_->width() / 2;
@@ -44,9 +44,9 @@ void YoutubeDisplay::clearAndRedraw(int subscriberCount) {
     int iconY = unitStartY;
     drawPlayButton(iconStartX, iconY);
     
-    // Draw subscriber count below with 6px gap
+    // Draw text below with gap
     int textY = iconY + iconHeight + gap;
-    drawSubscriberCount(subscriberCount, centerX, textY);
+    drawText(text, centerX, textY);
 }
 
 void YoutubeDisplay::drawPlayButton(int startX, int startY) {
@@ -92,8 +92,8 @@ void YoutubeDisplay::drawPlayButton(int startX, int startY) {
     }
 }
 
-void YoutubeDisplay::drawSubscriberText(int centerX, int startY) {
-    if (!fontsLoaded_) return;
+void YoutubeDisplay::drawText(const std::string& text, int centerX, int startY) {
+    if (!fontsLoaded_ || text.empty()) return;
     
     // Apply brightness scaling to text color
     int textR = scaleBrightness(Config::Colors::TEXT_R);
@@ -101,31 +101,12 @@ void YoutubeDisplay::drawSubscriberText(int centerX, int startY) {
     int textB = scaleBrightness(Config::Colors::TEXT_B);
     rgb_matrix::Color textColor(textR, textG, textB);
     
-    // Draw "subscribers" text
-    std::string text = "subscribers";
-    int textWidth = text.length() * mediumFont_.CharacterWidth('A');
+    // Calculate text width and position
+    int textWidth = text.length() * largeFont_.CharacterWidth('A');
     int textX = centerX - textWidth / 2;
     
-    rgb_matrix::DrawText(offscreen_, mediumFont_, textX, startY + mediumFont_.height(), textColor, text.c_str());
-}
-
-void YoutubeDisplay::drawSubscriberCount(int subscriberCount, int centerX, int startY) {
-    if (!fontsLoaded_) return;
-    
-    // Apply brightness scaling to text color
-    int textR = scaleBrightness(Config::Colors::TEXT_R);
-    int textG = scaleBrightness(Config::Colors::TEXT_G);
-    int textB = scaleBrightness(Config::Colors::TEXT_B);
-    rgb_matrix::Color textColor(textR, textG, textB);
-    
-    // Format number with commas
-    std::string formattedNumber = formatNumber(subscriberCount);
-    
-    // Draw the number
-    int textWidth = formattedNumber.length() * largeFont_.CharacterWidth('0');
-    int textX = centerX - textWidth / 2;
-    
-    rgb_matrix::DrawText(offscreen_, largeFont_, textX, startY + largeFont_.height(), textColor, formattedNumber.c_str());
+    // Draw the text
+    rgb_matrix::DrawText(offscreen_, largeFont_, textX, startY + largeFont_.height(), textColor, text.c_str());
 }
 
 void YoutubeDisplay::setBrightness(int brightnessLevel) {

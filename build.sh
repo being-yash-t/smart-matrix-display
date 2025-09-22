@@ -39,7 +39,7 @@ INCLUDES="-I../../include -I."
 LIBS="../../lib/librgbmatrix.a -lrt -lm"
 
 # Source files (organized modular structure)
-SOURCES="main.cc main_app.cpp features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp features/youtube_counter/youtube_app.cpp display/db_display.cpp display/youtube_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp"
+SOURCES="main.cc main_app.cpp features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp features/youtube_counter/youtube_app.cpp display/db_display.cpp display/youtube_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp core/rotating_text.cpp"
 
 # Output executable
 TARGET="led_matrix_apps"

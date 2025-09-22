@@ -3,6 +3,7 @@
 
 #include "../../display/youtube_display.h"
 #include "../../core/input_handler.h"
+#include "../../core/rotating_text.h"
 #include <string>
 
 class YoutubeApp {
@@ -28,7 +29,12 @@ private:
     // State
     bool isRunning_;
     int currentSubscriberCount_;
+    int currentPlays_;
+    int currentLikes_;
     int brightnessLevel_;
+    
+    // Components
+    RotatingText* rotatingText_;
     
     // Helper methods
     void setupMatrixOptions(RGBMatrix::Options& options, RuntimeOptions& runtimeOpt);

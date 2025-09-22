@@ -22,7 +22,8 @@ SOURCES = main.cc main_app.cpp \
           core/blink_manager.cpp \
           core/config.cpp \
           core/arg_parser.cpp \
-          core/color_utils.cpp
+          core/color_utils.cpp \
+          core/rotating_text.cpp
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)

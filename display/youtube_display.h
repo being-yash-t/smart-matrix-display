@@ -14,17 +14,16 @@ public:
     ~YoutubeDisplay();
     
     // Main display update method
-    void update(int subscriberCount);
+    void update(const std::string& text);
     
     // Utility methods
     void setBrightness(int brightnessLevel);
     
 private:
     // Drawing methods
-    void clearAndRedraw(int subscriberCount);
+    void clearAndRedraw(const std::string& text);
     void drawPlayButton(int startX, int startY);
-    void drawSubscriberText(int centerX, int startY);
-    void drawSubscriberCount(int subscriberCount, int centerX, int startY);
+    void drawText(const std::string& text, int centerX, int startY);
     
     // Helper methods
     int scaleBrightness(int color) const;
