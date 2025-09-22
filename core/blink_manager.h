@@ -7,7 +7,7 @@ public:
     ~BlinkManager();
     
     // Update blink state and return current state
-    bool updateBlinkState();
+    bool updateBlinkState(int durationMs);
     
     // Get current blink state
     bool getCurrentState() const;
@@ -21,6 +21,7 @@ public:
 private:
     bool currentState_;
     bool previousState_;
+    long long lastToggleTime_;
 };
 
 #endif // BLINK_MANAGER_H

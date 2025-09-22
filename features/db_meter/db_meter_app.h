@@ -10,14 +10,15 @@
 
 class DbMeterApp {
 public:
-    DbMeterApp(int brightnessLevel = Config::DEFAULT_BRIGHTNESS);
+    DbMeterApp(RGBMatrix* matrix, int brightnessLevel = Config::DEFAULT_BRIGHTNESS);
     ~DbMeterApp();
     
     // Initialize the application
     bool initialize();
     
-    // Run the main application loop
-    void run();
+    // Update methods (called by main app)
+    void update();
+    void updateValue(int newValue);
     
     // Cleanup resources
     void cleanup();
@@ -28,7 +29,6 @@ public:
 private:
     RGBMatrix* matrix_;
     DbDisplay* display_;
-    InputHandler* inputHandler_;
     BlinkManager* blinkManager_;
     
     int currentDbValue_;
@@ -36,7 +36,6 @@ private:
     bool isRunning_;
     
     // Matrix configuration
-    void setupMatrixOptions(RGBMatrix::Options& options, RuntimeOptions& runtimeOpt);
     void printStartupInfo();
 };
 

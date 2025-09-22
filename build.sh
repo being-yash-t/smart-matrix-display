@@ -32,19 +32,19 @@ elif [ -n "$1" ]; then
     exit 1
 fi
 
-# Compiler settings
+# Compiler settings optimized for Pi Zero 2 W
 CXX=g++
-CXXFLAGS="-O3 -Wall -pthread"
+CXXFLAGS="-O2 -Wall -pthread"  # -O2 instead of -O3 for faster compilation
 INCLUDES="-I../../include -I."
 LIBS="../../lib/librgbmatrix.a -lrt -lm"
 
 # Source files (organized modular structure)
-SOURCES="features/db_meter/main.cc features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp display/db_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp"
+SOURCES="main.cc main_app.cpp features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp features/youtube_counter/youtube_app.cpp display/db_display.cpp display/youtube_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp"
 
 # Output executable
-TARGET="db_meter"
+TARGET="led_matrix_apps"
 
-echo -e "${BOLD}${CYAN}🔨 Building dB Meter Application...${NC}"
+echo -e "${BOLD}${CYAN}🔨 Building LED Matrix Applications...${NC}"
 echo -e "${BLUE}📁 Sources:${NC} $SOURCES"
 echo ""
 
@@ -62,12 +62,14 @@ if [ $? -eq 0 ]; then
         echo ""
         echo -e "${PURPLE}${BOLD}🚀 Running application...${NC}"
         echo -e "${YELLOW}💡 Press Ctrl+C to exit${NC}"
+        echo -e "${BLUE}💡 Usage: ${BOLD}./build.sh -r [-b brightness]${NC} ${BLUE}(e.g., -b 8 for 80% brightness)${NC}"
         echo ""
-        sudo ./$TARGET
+        sudo ./$TARGET "${@:2}"
     else
         echo ""
         echo -e "${BLUE}💡 To run:${NC} ${BOLD}sudo ./$TARGET${NC}"
         echo -e "${BLUE}💡 Or use:${NC} ${BOLD}./build.sh -r${NC} ${BLUE}to build and run${NC}"
+        echo -e "${BLUE}💡 Available apps:${NC} ${BOLD}db${NC} ${BLUE}(dB meter),${NC} ${BOLD}youtube${NC} ${BLUE}(subscriber counter)${NC}"
     fi
 else
     echo ""

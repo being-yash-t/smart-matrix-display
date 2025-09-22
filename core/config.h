@@ -22,6 +22,7 @@ public:
     
     // Font paths
     static const std::string LARGE_FONT_PATH;
+    static const std::string MEDIUM_FONT_PATH;
     static const std::string SMALL_FONT_PATH;
     
     // Color definitions

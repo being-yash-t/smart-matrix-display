@@ -1,63 +1,80 @@
 # Makefile for LED Matrix Applications
+# Optimized for Pi Zero 2 W
 
-# Compiler and flags
+# Compiler settings
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -O3 -pthread
+CXXFLAGS = -O2 -Wall -pthread -std=c++11
 INCLUDES = -I../../include -I.
-LIBS = ../../lib/librgbmatrix.a -lrt -lm -lpthread
+LIBS = ../../lib/librgbmatrix.a -lrt -lm
 
-# Source files (organized structure)
-CORE_SOURCES = core/config.cpp core/arg_parser.cpp core/input_handler.cpp core/blink_manager.cpp
-DISPLAY_SOURCES = display/db_display.cpp
-DB_METER_SOURCES = features/db_meter/main.cc features/db_meter/db_meter_app.cpp
+# Target executable
+TARGET = led_matrix_apps
 
-ALL_SOURCES = $(CORE_SOURCES) $(DISPLAY_SOURCES) $(DB_METER_SOURCES)
-OBJECTS = $(ALL_SOURCES:.cc=.o) $(ALL_SOURCES:.cpp=.o)
-TARGET = db_meter
+# Source files
+SOURCES = main.cc main_app.cpp \
+          features/db_meter/db_meter_app.cpp \
+          features/db_meter/db_color_calculator.cpp \
+          features/youtube_counter/youtube_app.cpp \
+          display/db_display.cpp \
+          display/youtube_display.cpp \
+          display/border_renderer.cpp \
+          core/input_handler.cpp \
+          core/blink_manager.cpp \
+          core/config.cpp \
+          core/arg_parser.cpp \
+          core/color_utils.cpp
+
+# Object files
+OBJECTS = $(SOURCES:.cpp=.o)
+OBJECTS := $(OBJECTS:.cc=.o)
 
 # Default target
 all: $(TARGET)
 
-# Build the main executable
+# Build the executable
 $(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+	@echo "🔗 Linking..."
+	$(CXX) $(OBJECTS) -o $(TARGET) $(LIBS)
 
-# Compile source files
-%.o: %.cc
+# Compile source files to object files
+%.o: %.cpp
+	@echo "⚙️  Compiling $<..."
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-%.o: %.cpp
+%.o: %.cc
+	@echo "⚙️  Compiling $<..."
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # Clean build artifacts
 clean:
+	@echo "🧹 Cleaning build artifacts..."
 	rm -f $(OBJECTS) $(TARGET)
 
-# Install (optional)
-install: $(TARGET)
-	cp $(TARGET) /usr/local/bin/
-
-# Uninstall (optional)
-uninstall:
-	rm -f /usr/local/bin/$(TARGET)
+# Install dependencies (if needed)
+install-deps:
+	@echo "📦 Installing dependencies..."
+	sudo apt-get update
+	sudo apt-get install -y build-essential
 
 # Run the application
 run: $(TARGET)
-	./$(TARGET)
+	@echo "🚀 Running application..."
+	sudo ./$(TARGET)
 
-# Debug build
-debug: CXXFLAGS += -g -DDEBUG
-debug: $(TARGET)
+# Build and run
+build-run: $(TARGET)
+	@echo "🚀 Running application..."
+	sudo ./$(TARGET)
 
-# Help target
+# Help
 help:
 	@echo "Available targets:"
-	@echo "  all      - Build the application (default)"
-	@echo "  clean    - Remove build artifacts"
-	@echo "  run      - Build and run the application"
-	@echo "  debug    - Build with debug symbols"
-	@echo "  install  - Install to /usr/local/bin"
-	@echo "  uninstall- Remove from /usr/local/bin"
-	@echo "  help     - Show this help message"
+	@echo "  all        - Build the application (default)"
+	@echo "  clean      - Remove build artifacts"
+	@echo "  run        - Build and run the application"
+	@echo "  build-run  - Build and run the application"
+	@echo "  help       - Show this help message"
+	@echo ""
+	@echo "For parallel compilation, use: make -j4"
 
-.PHONY: all clean install uninstall run debug help
+.PHONY: all clean install-deps run build-run help

@@ -3,13 +3,10 @@
 #include <iostream>
 #include <signal.h>
 
-volatile bool interrupt_received = false;
-static void InterruptHandler(int signo) {
-    interrupt_received = true;
-}
+// Interrupt handling is managed by the main app
 
-DbMeterApp::DbMeterApp(int brightnessLevel) 
-    : matrix_(nullptr), display_(nullptr), inputHandler_(nullptr), 
+DbMeterApp::DbMeterApp(RGBMatrix* matrix, int brightnessLevel) 
+    : matrix_(matrix), display_(nullptr), 
       blinkManager_(nullptr), currentDbValue_(Config::DEFAULT_DB_VALUE), 
       brightnessLevel_(brightnessLevel), isRunning_(false) {
 }
@@ -19,26 +16,16 @@ DbMeterApp::~DbMeterApp() {
 }
 
 bool DbMeterApp::initialize() {
-    // Set up matrix options
-    RGBMatrix::Options matrix_options;
-    RuntimeOptions runtime_opt;
-    setupMatrixOptions(matrix_options, runtime_opt);
-    
-    // Create matrix
-    matrix_ = CreateMatrixFromOptions(matrix_options, runtime_opt);
     if (!matrix_) {
-        std::cerr << "\033[0;31m❌ Could not initialize matrix\033[0m" << std::endl;
+        std::cerr << "\033[0;31m❌ Matrix not provided\033[0m" << std::endl;
         return false;
     }
     
     // Create components
     display_ = new DbDisplay(matrix_, brightnessLevel_);
-    inputHandler_ = new InputHandler();
     blinkManager_ = new BlinkManager();
     
-    // Set up interrupt handlers
-    signal(SIGTERM, InterruptHandler);
-    signal(SIGINT, InterruptHandler);
+    // Interrupt handlers are managed by the main app
     
     isRunning_ = true;
     printStartupInfo();
@@ -46,33 +33,25 @@ bool DbMeterApp::initialize() {
     return true;
 }
 
-void DbMeterApp::run() {
+void DbMeterApp::update() {
     if (!isRunning_) {
-        std::cerr << "\033[0;31m❌ Application not initialized\033[0m" << std::endl;
         return;
     }
     
-    while (!interrupt_received && isRunning_) {
-        // Check for new input
-        if (inputHandler_->hasInput()) {
-            int newValue = inputHandler_->readIntValue();
-            if (inputHandler_->isValidIntValue(newValue, 0, 120)) {
-                currentDbValue_ = newValue;
-            }
-        }
-        
-        // Update blink state first
-        bool currentBlinkState = blinkManager_->updateBlinkState();
-        
-        // Update display with current blink state
-        display_->update(currentDbValue_, currentBlinkState);
-        
-        // Sleep based on current dB level
-        int sleepDuration = DbColorCalculator::getBlinkDuration(currentDbValue_);
-        usleep(sleepDuration);
-    }
+    // Get blink duration based on dB level
+    int blinkDuration = DbColorCalculator::getBlinkDuration(currentDbValue_);
     
-    std::cout << "\n\033[0;31m⚠️  Received CTRL-C. Exiting.\033[0m" << std::endl;
+    // Update blink state with duration
+    bool currentBlinkState = blinkManager_->updateBlinkState(blinkDuration);
+    
+    // Update display with current blink state
+    display_->update(currentDbValue_, currentBlinkState);
+}
+
+void DbMeterApp::updateValue(int newValue) {
+    if (newValue >= 0 && newValue <= 120) {
+        currentDbValue_ = newValue;
+    }
 }
 
 void DbMeterApp::cleanup() {
@@ -81,10 +60,6 @@ void DbMeterApp::cleanup() {
         display_ = nullptr;
     }
     
-    if (inputHandler_) {
-        delete inputHandler_;
-        inputHandler_ = nullptr;
-    }
     
     if (blinkManager_) {
         delete blinkManager_;
@@ -93,8 +68,7 @@ void DbMeterApp::cleanup() {
     
     if (matrix_) {
         matrix_->Clear();
-        delete matrix_;
-        matrix_ = nullptr;
+        // Don't delete matrix_ - it's managed by the main app
     }
     
     isRunning_ = false;
@@ -109,22 +83,11 @@ void DbMeterApp::setBrightness(int brightnessLevel) {
     }
 }
 
-void DbMeterApp::setupMatrixOptions(RGBMatrix::Options& options, RuntimeOptions& runtimeOpt) {
-    options.hardware_mapping = "regular";
-    options.rows = 48;
-    options.cols = 96;
-    options.pwm_bits = 11;
-    options.pwm_lsb_nanoseconds = 130;
-    options.brightness = 100;
-    options.disable_hardware_pulsing = true;
-    
-    runtimeOpt.gpio_slowdown = 4;
-}
 
 void DbMeterApp::printStartupInfo() {
     std::cout << "\033[1;36m🎵 dB Meter Application - Audio Level Monitor\033[0m" << std::endl;
     std::cout << "\033[0;33m💡 Brightness:\033[0m " << brightnessLevel_ << "/10 (" << (brightnessLevel_ * 10) << "%)" << std::endl;
     std::cout << "\033[0;32m📊 Enter dB values (0-120) and press Enter:\033[0m" << std::endl;
-    std::cout << "\033[0;31m⚠️  Press <CTRL-C> to exit\033[0m" << std::endl;
+    std::cout << "\033[0;31m⚠️  Type 'back' to return to main menu\033[0m" << std::endl;
     std::cout << std::endl;
 }

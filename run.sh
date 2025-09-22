@@ -13,7 +13,7 @@ WHITE='\033[1;37m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
 
-TARGET="db_meter"
+TARGET="led_matrix_apps"
 
 # Check if executable exists
 if [ ! -f "$TARGET" ]; then
@@ -23,7 +23,8 @@ if [ ! -f "$TARGET" ]; then
     exit 1
 fi
 
-echo -e "${PURPLE}${BOLD}🚀 Running dB Meter Application...${NC}"
+echo -e "${PURPLE}${BOLD}🚀 Running LED Matrix Applications...${NC}"
 echo -e "${YELLOW}💡 Press Ctrl+C to exit${NC}"
+echo -e "${BLUE}💡 Usage: ${BOLD}./run.sh [-b brightness]${NC} ${BLUE}(e.g., -b 8 for 80% brightness)${NC}"
 echo ""
-sudo ./$TARGET
+sudo ./$TARGET "$@"

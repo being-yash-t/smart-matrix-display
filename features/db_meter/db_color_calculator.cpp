@@ -59,13 +59,13 @@ bool DbColorCalculator::shouldBlink(int dbValue) {
 
 int DbColorCalculator::getBlinkDuration(int dbValue) {
     if (dbValue >= YELLOW_THRESHOLD && dbValue < ORANGE_THRESHOLD) {
-        return Config::BLINK_DURATION_SLOW;    // 80-89dB: slow fade
+        return Config::BLINK_DURATION_SLOW / 1000;    // 80-89dB: slow fade (500ms)
     } else if (dbValue >= ORANGE_THRESHOLD && dbValue < RED_THRESHOLD) {
-        return Config::BLINK_DURATION_MEDIUM;  // 90-94dB: medium flash
+        return Config::BLINK_DURATION_MEDIUM / 1000;  // 90-94dB: medium flash (250ms)
     } else if (dbValue >= RED_THRESHOLD) {
-        return Config::BLINK_DURATION_FAST;    // 95dB+: fast flash
+        return Config::BLINK_DURATION_FAST / 1000;    // 95dB+: fast flash (100ms)
     }
-    return Config::BLINK_DURATION_DEFAULT;
+    return Config::BLINK_DURATION_DEFAULT / 1000;     // Default (200ms)
 }
 
 ColorUtils::Color DbColorCalculator::getTransitionColor(int dbValue, int startThreshold, int endThreshold,
