@@ -88,21 +88,26 @@ void MainApp::run() {
                     std::cout << "\n\033[0;32m🔙 Returned to main menu\033[0m" << std::endl;
                     printMainMenu();
                 } else {
-                    // Try to parse as numeric input for the active app
-                    try {
-                        int newValue = std::stoi(input);
-                        
-                        if (currentApp_ == "db") {
+                    // Handle input for active app
+                    if (currentApp_ == "db") {
+                        // Try to parse as numeric input for DB meter
+                        try {
+                            int newValue = std::stoi(input);
                             if (inputHandler_->isValidIntValue(newValue, 0, 120)) {
                                 dbMeterApp_->updateValue(newValue);
                             }
-                        } else if (currentApp_ == "youtube") {
-                            if (inputHandler_->isValidIntValue(newValue, 0, 999999999)) {
-                                youtubeApp_->updateValue(newValue);
-                            }
+                        } catch (const std::invalid_argument&) {
+                            // Invalid input, ignore
                         }
-                    } catch (const std::invalid_argument&) {
-                        // Invalid input, ignore
+                    } else if (currentApp_ == "youtube") {
+                        // Handle YouTube app input (channel ID or commands)
+                        if (input.length() == 1) {
+                            // Single character input - handle as keyboard input
+                            youtubeApp_->handleKeyboardInput(input[0]);
+                        } else {
+                            // Multi-character input - treat as channel ID
+                            youtubeApp_->setChannelId(input);
+                        }
                     }
                 }
             }

@@ -12,6 +12,7 @@ public:
     
     // Configuration
     void addText(const std::string& text);
+    void clearTexts();
     void setRotationInterval(int intervalMs);
     void setEnabled(bool enabled);
     

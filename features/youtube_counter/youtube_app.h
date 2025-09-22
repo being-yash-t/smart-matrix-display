@@ -4,6 +4,7 @@
 #include "../../display/youtube_display.h"
 #include "../../core/input_handler.h"
 #include "../../core/rotating_text.h"
+#include "network/youtube_api.h"
 #include <string>
 
 class YoutubeApp {
@@ -21,6 +22,11 @@ public:
     void setBrightness(int brightnessLevel);
     void printStartupInfo();
     
+    // API integration
+    void setChannelId(const std::string& channelId);
+    void refreshData();
+    void handleKeyboardInput(char key);
+    
 private:
     // Components
     RGBMatrix* matrix_;
@@ -28,16 +34,28 @@ private:
     
     // State
     bool isRunning_;
-    int currentSubscriberCount_;
-    int currentPlays_;
-    int currentLikes_;
+    long currentSubscriberCount_;
+    long currentViewCount_;
+    long currentVideoCount_;
     int brightnessLevel_;
+    
+    // API and data state
+    YouTubeAPI* youtubeAPI_;
+    std::string channelId_;
+    bool isLoading_;
+    bool hasError_;
+    std::string errorMessage_;
     
     // Components
     RotatingText* rotatingText_;
     
     // Helper methods
     void setupMatrixOptions(RGBMatrix::Options& options, RuntimeOptions& runtimeOpt);
+    void updateRotatingText();
+    void setLoadingState();
+    void setErrorState(const std::string& error);
+    void setDataState(const YouTubeChannelStats& stats);
+    std::string formatNumber(long number) const;
 };
 
 #endif // YOUTUBE_APP_H

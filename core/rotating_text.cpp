@@ -13,6 +13,11 @@ void RotatingText::addText(const std::string& text) {
     texts_.push_back(text);
 }
 
+void RotatingText::clearTexts() {
+    texts_.clear();
+    currentIndex_ = 0;
+}
+
 void RotatingText::setRotationInterval(int intervalMs) {
     rotationIntervalMs_ = intervalMs;
 }

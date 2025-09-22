@@ -5,7 +5,7 @@
 CXX = g++
 CXXFLAGS = -O2 -Wall -pthread -std=c++11
 INCLUDES = -I../../include -I.
-LIBS = ../../lib/librgbmatrix.a -lrt -lm
+LIBS = ../../lib/librgbmatrix.a -lrt -lm -lcurl
 
 # Target executable
 TARGET = led_matrix_apps
@@ -15,6 +15,7 @@ SOURCES = main.cc main_app.cpp \
           features/db_meter/db_meter_app.cpp \
           features/db_meter/db_color_calculator.cpp \
           features/youtube_counter/youtube_app.cpp \
+          features/youtube_counter/network/youtube_api.cpp \
           display/db_display.cpp \
           display/youtube_display.cpp \
           display/border_renderer.cpp \
@@ -23,7 +24,8 @@ SOURCES = main.cc main_app.cpp \
           core/config.cpp \
           core/arg_parser.cpp \
           core/color_utils.cpp \
-          core/rotating_text.cpp
+          core/rotating_text.cpp \
+          core/network_handler.cpp
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)
