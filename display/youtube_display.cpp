@@ -31,7 +31,7 @@ void YoutubeDisplay::clearAndRedraw(int subscriberCount) {
     
     // Calculate total height of the unit (icon + gap + text)
     int iconHeight = 13; // YouTube icon height (increased for triangle tip)
-    int gap = 4; // 4 pixel gap
+    int gap = 2; // 6 pixel gap (4 from text)
     int textHeight = largeFont_.height(); // Text height
     int totalUnitHeight = iconHeight + gap + textHeight;
     
@@ -44,7 +44,7 @@ void YoutubeDisplay::clearAndRedraw(int subscriberCount) {
     int iconY = unitStartY;
     drawPlayButton(iconStartX, iconY);
     
-    // Draw subscriber count below with 4px gap
+    // Draw subscriber count below with 6px gap
     int textY = iconY + iconHeight + gap;
     drawSubscriberCount(subscriberCount, centerX, textY);
 }

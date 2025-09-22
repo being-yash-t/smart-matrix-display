@@ -184,7 +184,7 @@ void MainApp::printMainMenu() {
 void MainApp::handleCommand(const std::string& command) {
     if (command == "db") {
         switchToApp("db");
-    } else if (command == "youtube") {
+    } else if (command == "youtube" || command == "yt") {
         switchToApp("youtube");
     } else if (command == "back" || command == "menu") {
         cleanupCurrentApp();
