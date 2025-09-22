@@ -1,16 +1,16 @@
-#ifndef SPOTIFY_APP_H
-#define SPOTIFY_APP_H
+#ifndef YOUTUBE_APP_H
+#define YOUTUBE_APP_H
 
-#include "../../display/spotify_display.h"
-#include "../../core/input_handler.h"
-#include "../../core/rotating_text.h"
-#include "network/spotify_api.h"
+#include "presentation/displays/youtube_display.h"
+#include "infrastructure/input/input_handler.h"
+#include "shared/utils/rotating_text.h"
+#include "infrastructure/network/youtube_api.h"
 #include <string>
 
-class SpotifyApp {
+class YoutubeApp {
 public:
-    SpotifyApp(RGBMatrix* matrix, int brightnessLevel = 5);
-    ~SpotifyApp();
+    YoutubeApp(RGBMatrix* matrix, int brightnessLevel = 5);
+    ~YoutubeApp();
     
     // Application lifecycle
     bool initialize();
@@ -23,29 +23,25 @@ public:
     void printStartupInfo();
     
     // API integration
-    void setArtistId(const std::string& artistId);
+    void setChannelId(const std::string& channelId);
     void refreshData();
     void handleKeyboardInput(char key);
     
 private:
     // Components
     RGBMatrix* matrix_;
-    SpotifyDisplay* display_;
+    YoutubeDisplay* display_;
     
     // State
     bool isRunning_;
-    std::string artistName_;
-    int popularity_;
-    int monthlyListeners_;
-    int albumCount_;
-    int trackCount_;
-    std::string topTrack_;
-    std::string genres_;
+    long currentSubscriberCount_;
+    long currentViewCount_;
+    long currentVideoCount_;
     int brightnessLevel_;
     
     // API and data state
-    SpotifyAPI* spotifyAPI_;
-    std::string artistId_;
+    YouTubeAPI* youtubeAPI_;
+    std::string channelId_;
     bool isLoading_;
     bool hasError_;
     std::string errorMessage_;
@@ -58,8 +54,8 @@ private:
     void updateRotatingText();
     void setLoadingState();
     void setErrorState(const std::string& error);
-    void setDataState(const SpotifyArtistStats& stats);
-    std::string formatNumber(int number) const;
+    void setDataState(const YouTubeChannelStats& stats);
+    std::string formatNumber(long number) const;
 };
 
-#endif // SPOTIFY_APP_H
+#endif // YOUTUBE_APP_H

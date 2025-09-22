@@ -1,5 +1,5 @@
 #include "main_app.h"
-#include "core/input_handler.h"
+#include "infrastructure/input/input_handler.h"
 #include <iostream>
 #include <signal.h>
 #include <unistd.h>

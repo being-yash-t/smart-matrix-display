@@ -3,11 +3,11 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
-#include "core/arg_parser.h"
-#include "core/input_handler.h"
-#include "features/db_meter/db_meter_app.h"
-#include "features/youtube_counter/youtube_app.h"
-#include "features/spotify_counter/spotify_app.h"
+#include "infrastructure/config/arg_parser.h"
+#include "infrastructure/input/input_handler.h"
+#include "presentation/controllers/db_meter_app.h"
+#include "presentation/controllers/youtube_app.h"
+#include "presentation/controllers/spotify_app.h"
 #include <string>
 
 using namespace rgb_matrix;

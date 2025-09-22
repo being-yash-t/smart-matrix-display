@@ -4,31 +4,33 @@
 # Compiler settings
 CXX = g++
 CXXFLAGS = -O2 -Wall -pthread -std=c++11
-INCLUDES = -I../../include -I.
+INCLUDES = -I../../include -I. -Isrc
 LIBS = ../../lib/librgbmatrix.a -lrt -lm -lcurl
 
 # Target executable
 TARGET = led_matrix_apps
 
 # Source files
-SOURCES = main.cc main_app.cpp \
-          features/db_meter/db_meter_app.cpp \
-          features/db_meter/db_color_calculator.cpp \
-          features/youtube_counter/youtube_app.cpp \
-          features/youtube_counter/network/youtube_api.cpp \
-          features/spotify_counter/spotify_app.cpp \
-          features/spotify_counter/network/spotify_api.cpp \
-          display/db_display.cpp \
-          display/youtube_display.cpp \
-          display/spotify_display.cpp \
-          display/border_renderer.cpp \
-          core/input_handler.cpp \
-          core/blink_manager.cpp \
-          core/config.cpp \
-          core/arg_parser.cpp \
-          core/color_utils.cpp \
-          core/rotating_text.cpp \
-          core/network_handler.cpp
+SOURCES = src/application/main.cc \
+          src/application/main_app.cpp \
+          src/presentation/controllers/db_meter_app.cpp \
+          src/presentation/controllers/db_color_calculator.cpp \
+          src/presentation/controllers/youtube_app.cpp \
+          src/infrastructure/network/youtube_api.cpp \
+          src/presentation/controllers/spotify_app.cpp \
+          src/infrastructure/network/spotify_api.cpp \
+          src/presentation/displays/db_display.cpp \
+          src/presentation/displays/youtube_display.cpp \
+          src/presentation/displays/spotify_display.cpp \
+          src/presentation/displays/text_display.cpp \
+          src/infrastructure/display/border_renderer.cpp \
+          src/infrastructure/input/input_handler.cpp \
+          src/shared/utils/blink_manager.cpp \
+          src/infrastructure/config/config.cpp \
+          src/infrastructure/config/arg_parser.cpp \
+          src/shared/utils/color_utils.cpp \
+          src/shared/utils/rotating_text.cpp \
+          src/shared/network/network_handler.cpp
 
 # Object files
 OBJECTS = $(SOURCES:.cpp=.o)

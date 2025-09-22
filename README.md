@@ -2,33 +2,53 @@
 
 A modular, reusable framework for creating LED matrix applications with clean architecture and organized code structure.
 
-## 📁 Project Structure
+## 📁 Project Structure (Clean Architecture)
 
 ```
-├── core/                    # Core reusable components
-│   ├── config.h/.cpp       # Generic configuration constants
-│   ├── arg_parser.h/.cpp   # Command line argument parsing
-│   ├── input_handler.h/.cpp # Generic non-blocking input management
-│   ├── blink_manager.h/.cpp # Generic blink state management
-│   └── color_utils.h/.cpp  # Generic color blending utilities
+src/
+├── application/           # Application layer (use cases, main app)
+│   ├── main.cc           # Application entry point
+│   ├── main_app.h/.cpp   # Main application orchestrator
 │
-├── display/                 # Display rendering components
-│   ├── border_renderer.h/.cpp # Generic border rendering
-│   ├── db_display.h/.cpp   # dB meter specific display
-│   └── text_display.h/.cpp # Simple text display
+├── domain/               # Domain layer (business logic, entities)
+│   ├── entities/         # Domain entities (future expansion)
+│   └── services/         # Domain services (future expansion)
 │
-├── features/               # Feature-specific applications
-│   ├── db_meter/          # dB Level Meter Application
-│   │   ├── main.cc        # Application entry point
-│   │   ├── db_meter_app.h/.cpp # Main application class
-│   │   └── db_color_calculator.h/.cpp # dB-specific color logic
-│   └── text_demo/         # Simple Text Display Application
-│       ├── main.cc        # Application entry point
-│       └── text_demo_app.h/.cpp # Main application class
+├── infrastructure/       # Infrastructure layer (external concerns)
+│   ├── config/          # Configuration and argument parsing
+│   │   ├── config.h/.cpp
+│   │   └── arg_parser.h/.cpp
+│   ├── display/         # Low-level display components
+│   │   └── border_renderer.h/.cpp
+│   ├── input/           # Input handling
+│   │   └── input_handler.h/.cpp
+│   └── network/         # External API integrations
+│       ├── spotify_api.h/.cpp
+│       └── youtube_api.h/.cpp
 │
-├── build.sh               # Unified build script
-├── run.sh                 # Run pre-built executable
-└── README.md              # This file
+├── presentation/         # Presentation layer (UI, display logic)
+│   ├── controllers/     # Application controllers
+│   │   ├── db_meter_app.h/.cpp
+│   │   ├── db_color_calculator.h/.cpp
+│   │   ├── spotify_app.h/.cpp
+│   │   └── youtube_app.h/.cpp
+│   └── displays/        # Display rendering components
+│       ├── db_display.h/.cpp
+│       ├── spotify_display.h/.cpp
+│       ├── youtube_display.h/.cpp
+│       └── text_display.h/.cpp
+│
+└── shared/              # Shared utilities
+    ├── network/         # Network utilities
+    │   └── network_handler.h/.cpp
+    └── utils/           # Common utilities
+        ├── color_utils.h/.cpp
+        ├── blink_manager.h/.cpp
+        └── rotating_text.h/.cpp
+
+├── build.sh             # Unified build script
+├── run.sh               # Run pre-built executable
+└── README.md            # This file
 ```
 
 ## 🚀 Quick Start
@@ -70,40 +90,64 @@ A modular, reusable framework for creating LED matrix applications with clean ar
 - **90-94dB**: Orange border, medium blink
 - **95dB+**: Red border, fast blink
 
-## 🏗️ Architecture
+## 🏗️ Clean Architecture
 
-### Core Components
-- **Config**: Generic configuration constants and settings
-- **ArgParser**: Command line argument handling
-- **InputHandler**: Generic non-blocking stdin input
-- **BlinkManager**: Generic blink state management
-- **ColorUtils**: Generic color blending utilities
+This project follows Clean Architecture principles with clear separation of concerns:
 
-### Display Components
-- **BorderRenderer**: Generic border rendering (reusable)
-- **DbDisplay**: dB meter specific display with brightness control
-- **TextDisplay**: Simple text display (no border)
-- **Modular Design**: Easy to extend for new display types
+### Application Layer (`src/application/`)
+- **MainApp**: Main application orchestrator that coordinates all components
+- **main.cc**: Application entry point
 
-### Feature Applications
-- **DbMeter**: Audio level monitoring with gradient borders
-- **TextDemo**: Simple text display application
-- **Extensible**: Easy to add new applications
+### Domain Layer (`src/domain/`)
+- **Entities**: Business objects and domain models (future expansion)
+- **Services**: Domain-specific business logic (future expansion)
+
+### Infrastructure Layer (`src/infrastructure/`)
+- **Config**: Configuration management and command line argument parsing
+- **Display**: Low-level display components and hardware abstraction
+- **Input**: Input handling and user interaction
+- **Network**: External API integrations (Spotify, YouTube)
+
+### Presentation Layer (`src/presentation/`)
+- **Controllers**: Application-specific controllers that orchestrate features
+- **Displays**: High-level display rendering components
+
+### Shared Layer (`src/shared/`)
+- **Utils**: Common utilities (color blending, blink management, text rotation)
+- **Network**: Network utilities and HTTP client functionality
+
+### Key Benefits
+- **Separation of Concerns**: Each layer has a specific responsibility
+- **Dependency Inversion**: High-level modules don't depend on low-level modules
+- **Testability**: Each layer can be tested independently
+- **Maintainability**: Changes in one layer don't affect others
+- **Extensibility**: Easy to add new features without modifying existing code
 
 ## 🔧 Adding New Applications
 
-1. Create a new folder in `features/`
-2. Add your main application files
-3. Update build scripts to include your sources
-4. Use core components for common functionality
+Following Clean Architecture principles:
 
-Example:
+1. **Controller**: Create a new controller in `src/presentation/controllers/`
+2. **Display**: Create display logic in `src/presentation/displays/`
+3. **Infrastructure**: Add any external dependencies in `src/infrastructure/`
+4. **Domain**: Add business logic in `src/domain/` (if needed)
+5. **Update**: Modify `src/application/main_app.cpp` to include your new controller
+6. **Build**: Update `Makefile` to include your new source files
+
+Example for a new Clock application:
 ```
-features/
-├── db_meter/          # Existing dB meter
-├── clock/             # New clock application
-├── weather/           # New weather display
-└── custom_app/        # Your new application
+src/
+├── presentation/
+│   ├── controllers/
+│   │   └── clock_app.h/.cpp      # Clock application controller
+│   └── displays/
+│       └── clock_display.h/.cpp  # Clock display rendering
+├── infrastructure/
+│   └── time/                     # Time-related infrastructure
+│       └── time_service.h/.cpp
+└── domain/
+    └── entities/
+        └── time_entity.h         # Time domain model
 ```
 
 ## 📋 Requirements
@@ -115,26 +159,30 @@ features/
 ## 🛠️ Manual Compilation
 
 ```bash
-g++ -O3 -Wall -pthread -I../../include -I. \
-    features/db_meter/main.cc \
-    features/db_meter/db_meter_app.cpp \
-    features/db_meter/db_color_calculator.cpp \
-    display/db_display.cpp \
-    display/border_renderer.cpp \
-    core/input_handler.cpp \
-    core/blink_manager.cpp \
-    core/config.cpp \
-    core/arg_parser.cpp \
-    core/color_utils.cpp \
+g++ -O3 -Wall -pthread -I../../include -I. -Isrc \
+    src/application/main.cc \
+    src/application/main_app.cpp \
+    src/presentation/controllers/db_meter_app.cpp \
+    src/presentation/controllers/db_color_calculator.cpp \
+    src/presentation/displays/db_display.cpp \
+    src/infrastructure/display/border_renderer.cpp \
+    src/infrastructure/input/input_handler.cpp \
+    src/shared/utils/blink_manager.cpp \
+    src/infrastructure/config/config.cpp \
+    src/infrastructure/config/arg_parser.cpp \
+    src/shared/utils/color_utils.cpp \
     ../../lib/librgbmatrix.a -lrt -lm \
-    -o db_meter
+    -o led_matrix_apps
 ```
 
 ## 📝 Usage
 
-1. Run the application: `./db_meter -b 8`
-2. Enter dB values (0-120) and press Enter
-3. Watch the display update with visual feedback
+1. Run the application: `./led_matrix_apps -b 8`
+2. Use the interactive menu to switch between applications:
+   - dB Meter: Audio level monitoring
+   - Spotify Counter: Artist statistics display
+   - YouTube Counter: Channel statistics display
+3. Follow on-screen instructions for each application
 4. Press Ctrl+C to exit
 
 ## 🎯 Design Principles

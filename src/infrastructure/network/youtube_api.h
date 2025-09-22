@@ -1,7 +1,7 @@
 #ifndef YOUTUBE_API_H
 #define YOUTUBE_API_H
 
-#include "../../../core/network_handler.h"
+#include "shared/network/network_handler.h"
 #include <string>
 
 struct YouTubeChannelStats {

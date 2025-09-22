@@ -25,16 +25,16 @@ This will run the pre-built executable.
 ### Set Brightness Level
 ```bash
 # Run with 80% brightness
-./db_meter -b 8
+./led_matrix_apps -b 8
 
 # Run with 10% brightness (dim)
-./db_meter -b 1
+./led_matrix_apps -b 1
 
 # Run with 100% brightness (bright)
-./db_meter -b 10
+./led_matrix_apps -b 10
 
 # Show help
-./db_meter -h
+./led_matrix_apps -h
 ```
 
 ### Brightness Levels
@@ -53,44 +53,65 @@ This will run the pre-built executable.
 
 If you prefer to compile manually:
 ```bash
-g++ -O3 -Wall -pthread -I../../include -I. -o db_meter \
-    features/db_meter/main.cc \
-    features/db_meter/db_meter_app.cpp \
-    features/db_meter/db_color_calculator.cpp \
-    display/db_display.cpp \
-    display/border_renderer.cpp \
-    core/input_handler.cpp \
-    core/blink_manager.cpp \
-    core/config.cpp \
-    core/arg_parser.cpp \
-    core/color_utils.cpp \
-    ../../lib/librgbmatrix.a -lrt -lm && sudo ./db_meter
+g++ -O3 -Wall -pthread -I../../include -I. -Isrc -o led_matrix_apps \
+    src/application/main.cc \
+    src/application/main_app.cpp \
+    src/presentation/controllers/db_meter_app.cpp \
+    src/presentation/controllers/db_color_calculator.cpp \
+    src/presentation/displays/db_display.cpp \
+    src/infrastructure/display/border_renderer.cpp \
+    src/infrastructure/input/input_handler.cpp \
+    src/shared/utils/blink_manager.cpp \
+    src/infrastructure/config/config.cpp \
+    src/infrastructure/config/arg_parser.cpp \
+    src/shared/utils/color_utils.cpp \
+    ../../lib/librgbmatrix.a -lrt -lm && sudo ./led_matrix_apps
 ```
 
 ## File Structure
 
-### Organized Structure
+### Clean Architecture Structure
 ```
-├── core/                    # Reusable core components
-│   ├── config.h/.cpp       # Generic configuration constants
-│   ├── arg_parser.h/.cpp   # Command line parsing
-│   ├── input_handler.h/.cpp # Generic input management
-│   ├── blink_manager.h/.cpp # Generic blink state management
-│   └── color_utils.h/.cpp  # Generic color utilities
+src/
+├── application/           # Application layer
+│   ├── main.cc           # Entry point
+│   └── main_app.h/.cpp   # Main orchestrator
 │
-├── display/                 # Display rendering
-│   ├── border_renderer.h/.cpp # Generic border rendering
-│   ├── db_display.h/.cpp   # dB meter display
-│   └── text_display.h/.cpp # Simple text display
+├── domain/               # Domain layer (business logic)
+│   ├── entities/         # Domain entities
+│   └── services/         # Domain services
 │
-└── features/               # Feature applications
-    ├── db_meter/          # dB Meter application
-    │   ├── main.cc        # Entry point
-    │   ├── db_meter_app.h/.cpp # Main application class
-    │   └── db_color_calculator.h/.cpp # dB color logic
-    └── text_demo/         # Text demo application
-        ├── main.cc        # Entry point
-        └── text_demo_app.h/.cpp # Main application class
+├── infrastructure/       # Infrastructure layer
+│   ├── config/          # Configuration
+│   │   ├── config.h/.cpp
+│   │   └── arg_parser.h/.cpp
+│   ├── display/         # Low-level display
+│   │   └── border_renderer.h/.cpp
+│   ├── input/           # Input handling
+│   │   └── input_handler.h/.cpp
+│   └── network/         # External APIs
+│       ├── spotify_api.h/.cpp
+│       └── youtube_api.h/.cpp
+│
+├── presentation/         # Presentation layer
+│   ├── controllers/     # Application controllers
+│   │   ├── db_meter_app.h/.cpp
+│   │   ├── db_color_calculator.h/.cpp
+│   │   ├── spotify_app.h/.cpp
+│   │   └── youtube_app.h/.cpp
+│   └── displays/        # Display rendering
+│       ├── db_display.h/.cpp
+│       ├── spotify_display.h/.cpp
+│       ├── youtube_display.h/.cpp
+│       └── text_display.h/.cpp
+│
+└── shared/              # Shared utilities
+    ├── network/         # Network utilities
+    │   └── network_handler.h/.cpp
+    └── utils/           # Common utilities
+        ├── color_utils.h/.cpp
+        ├── blink_manager.h/.cpp
+        └── rotating_text.h/.cpp
 ```
 
 ### Build Scripts

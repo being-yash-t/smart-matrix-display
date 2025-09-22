@@ -3,8 +3,8 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
-#include "../core/config.h"
-#include "../core/color_utils.h"
+#include "infrastructure/config/config.h"
+#include "shared/utils/color_utils.h"
 
 using namespace rgb_matrix;
 

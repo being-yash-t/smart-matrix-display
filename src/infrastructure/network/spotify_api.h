@@ -1,7 +1,7 @@
 #ifndef SPOTIFY_API_H
 #define SPOTIFY_API_H
 
-#include "../../../core/network_handler.h"
+#include "shared/network/network_handler.h"
 #include <string>
 
 struct SpotifyArtistStats {

@@ -1,17 +1,17 @@
-#ifndef YOUTUBE_DISPLAY_H
-#define YOUTUBE_DISPLAY_H
+#ifndef SPOTIFY_DISPLAY_H
+#define SPOTIFY_DISPLAY_H
 
 #include "led-matrix.h"
 #include "graphics.h"
-#include "../core/config.h"
+#include "infrastructure/config/config.h"
 #include <string>
 
 using namespace rgb_matrix;
 
-class YoutubeDisplay {
+class SpotifyDisplay {
 public:
-    YoutubeDisplay(RGBMatrix* matrix, int brightnessLevel = Config::DEFAULT_BRIGHTNESS);
-    ~YoutubeDisplay();
+    SpotifyDisplay(RGBMatrix* matrix, int brightnessLevel = Config::DEFAULT_BRIGHTNESS);
+    ~SpotifyDisplay();
     
     // Main display update method
     void update(const std::string& text);
@@ -22,7 +22,7 @@ public:
 private:
     // Drawing methods
     void clearAndRedraw(const std::string& text);
-    void drawPlayButton(int startX, int startY);
+    void drawSpotifyLogo(int startX, int startY);
     void drawText(const std::string& text, int centerX, int startY);
     
     // Helper methods
@@ -42,4 +42,4 @@ private:
     bool fontsLoaded_;
 };
 
-#endif // YOUTUBE_DISPLAY_H
+#endif // SPOTIFY_DISPLAY_H

@@ -24,7 +24,7 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo -e "${BLUE}Options:${NC}"
     echo -e "  ${BOLD}-r${NC}     Build and run immediately"
     echo -e "  ${BOLD}-c${NC}     Clean build artifacts first"
-    echo -e "  ${BOLD}-j N${NC}   Use N parallel jobs (default: 4)"
+    echo -e "  ${BOLD}-j N${NC}   Use N parallel jobs (default: 2)"
     echo -e "  ${BOLD}-h${NC}     Show this help"
     echo ""
     echo -e "${BLUE}Examples:${NC}"
@@ -38,7 +38,7 @@ fi
 # Parse arguments
 CLEAN_FIRST=false
 RUN_AFTER_BUILD=false
-JOBS=4
+JOBS=2
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -91,7 +91,7 @@ if [ $? -eq 0 ]; then
         echo ""
         echo -e "${BLUE}💡 To run:${NC} ${BOLD}sudo ./$TARGET${NC}"
         echo -e "${BLUE}💡 Or use:${NC} ${BOLD}./build_fast.sh -r${NC} ${BLUE}to build and run${NC}"
-        echo -e "${BLUE}💡 Available apps:${NC} ${BOLD}db${NC} ${BLUE}(dB meter),${NC} ${BOLD}youtube${NC} ${BLUE}(subscriber counter)${NC}"
+        echo -e "${BLUE}💡 Available apps:${NC} ${BOLD}db${NC} ${BLUE}(dB meter),${NC} ${BOLD}youtube${NC} ${BLUE}(subscriber counter),${NC} ${BOLD}spotify${NC} ${BLUE}(artist stats)${NC}"
     fi
 else
     echo ""

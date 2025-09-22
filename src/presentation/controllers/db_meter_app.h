@@ -1,10 +1,10 @@
 #ifndef DB_METER_APP_H
 #define DB_METER_APP_H
 
-#include "../../display/db_display.h"
-#include "../../core/input_handler.h"
-#include "../../core/blink_manager.h"
-#include "../../core/config.h"
+#include "presentation/displays/db_display.h"
+#include "infrastructure/input/input_handler.h"
+#include "shared/utils/blink_manager.h"
+#include "infrastructure/config/config.h"
 #include "led-matrix.h"
 #include <unistd.h>
 

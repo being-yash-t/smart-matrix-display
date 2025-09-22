@@ -1,8 +1,8 @@
 #ifndef DB_COLOR_CALCULATOR_H
 #define DB_COLOR_CALCULATOR_H
 
-#include "../../core/color_utils.h"
-#include "../../core/config.h"
+#include "shared/utils/color_utils.h"
+#include "infrastructure/config/config.h"
 
 class DbColorCalculator {
 public:
