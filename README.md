@@ -6,18 +6,25 @@ A modular, reusable framework for creating LED matrix applications with clean ar
 
 ```
 ├── core/                    # Core reusable components
-│   ├── config.h/.cpp       # Configuration constants and settings
+│   ├── config.h/.cpp       # Generic configuration constants
 │   ├── arg_parser.h/.cpp   # Command line argument parsing
-│   ├── input_handler.h/.cpp # Non-blocking input management
-│   └── blink_manager.h/.cpp # Blink state management
+│   ├── input_handler.h/.cpp # Generic non-blocking input management
+│   ├── blink_manager.h/.cpp # Generic blink state management
+│   └── color_utils.h/.cpp  # Generic color blending utilities
 │
 ├── display/                 # Display rendering components
-│   ├── db_display.h/.cpp   # Display rendering engine
+│   ├── border_renderer.h/.cpp # Generic border rendering
+│   ├── db_display.h/.cpp   # dB meter specific display
+│   └── text_display.h/.cpp # Simple text display
 │
 ├── features/               # Feature-specific applications
-│   └── db_meter/          # dB Level Meter Application
+│   ├── db_meter/          # dB Level Meter Application
+│   │   ├── main.cc        # Application entry point
+│   │   ├── db_meter_app.h/.cpp # Main application class
+│   │   └── db_color_calculator.h/.cpp # dB-specific color logic
+│   └── text_demo/         # Simple Text Display Application
 │       ├── main.cc        # Application entry point
-│       ├── db_meter_app.h/.cpp # Main application class
+│       └── text_demo_app.h/.cpp # Main application class
 │
 ├── build.sh               # Unified build script
 ├── run.sh                 # Run pre-built executable
@@ -66,17 +73,21 @@ A modular, reusable framework for creating LED matrix applications with clean ar
 ## 🏗️ Architecture
 
 ### Core Components
-- **Config**: Centralized configuration and constants
+- **Config**: Generic configuration constants and settings
 - **ArgParser**: Command line argument handling
-- **InputHandler**: Non-blocking stdin input
-- **BlinkManager**: Blink state management
+- **InputHandler**: Generic non-blocking stdin input
+- **BlinkManager**: Generic blink state management
+- **ColorUtils**: Generic color blending utilities
 
 ### Display Components
-- **DbDisplay**: Rendering engine with brightness control
+- **BorderRenderer**: Generic border rendering (reusable)
+- **DbDisplay**: dB meter specific display with brightness control
+- **TextDisplay**: Simple text display (no border)
 - **Modular Design**: Easy to extend for new display types
 
 ### Feature Applications
-- **DbMeter**: Audio level monitoring application
+- **DbMeter**: Audio level monitoring with gradient borders
+- **TextDemo**: Simple text display application
 - **Extensible**: Easy to add new applications
 
 ## 🔧 Adding New Applications
@@ -106,12 +117,15 @@ features/
 ```bash
 g++ -O3 -Wall -pthread -I../../include -I. \
     features/db_meter/main.cc \
-    features/db_meter/db_meter_app_new.cpp \
+    features/db_meter/db_meter_app.cpp \
+    features/db_meter/db_color_calculator.cpp \
     display/db_display.cpp \
+    display/border_renderer.cpp \
     core/input_handler.cpp \
     core/blink_manager.cpp \
     core/config.cpp \
     core/arg_parser.cpp \
+    core/color_utils.cpp \
     ../../lib/librgbmatrix.a -lrt -lm \
     -o db_meter
 ```

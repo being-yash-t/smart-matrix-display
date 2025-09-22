@@ -20,19 +20,25 @@ bool InputHandler::hasInput() {
     return select(STDIN_FILENO + 1, &temp_readfds, NULL, NULL, &temp_timeout) > 0;
 }
 
-int InputHandler::readDbValue() {
-    int db = -1;
+int InputHandler::readIntValue() {
+    int value = -1;
     std::string line;
     std::getline(std::cin, line);
     try { 
-        db = std::stoi(line); 
+        value = std::stoi(line); 
     }
     catch(...) { 
-        db = -1; 
+        value = -1; 
     }
-    return db;
+    return value;
 }
 
-bool InputHandler::isValidDbValue(int value) {
-    return value >= 0 && value <= 120;
+std::string InputHandler::readStringValue() {
+    std::string line;
+    std::getline(std::cin, line);
+    return line;
+}
+
+bool InputHandler::isValidIntValue(int value, int min, int max) {
+    return value >= min && value <= max;
 }

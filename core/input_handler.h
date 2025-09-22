@@ -12,11 +12,14 @@ public:
     // Check for new input (non-blocking)
     bool hasInput();
     
-    // Read dB value from stdin
-    int readDbValue();
+    // Read integer value from stdin
+    int readIntValue();
     
-    // Validate dB value
-    bool isValidDbValue(int value);
+    // Read string value from stdin
+    std::string readStringValue();
+    
+    // Validate integer value within range
+    bool isValidIntValue(int value, int min = 0, int max = 100);
     
 private:
     fd_set readfds_;

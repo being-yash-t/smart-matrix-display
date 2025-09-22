@@ -4,6 +4,7 @@
 #include "led-matrix.h"
 #include "graphics.h"
 #include "../core/config.h"
+#include "../core/color_utils.h"
 #include "border_renderer.h"
 #include <string>
 
@@ -18,7 +19,6 @@ public:
     void update(int dbValue, bool blinkState);
     
     // Utility methods
-    int getBlinkDuration(int dbValue) const;
     void setBrightness(int brightnessLevel);
     
     // Border control

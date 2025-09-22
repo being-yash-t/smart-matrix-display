@@ -1,4 +1,5 @@
 #include "db_meter_app.h"
+#include "db_color_calculator.h"
 #include <iostream>
 #include <signal.h>
 
@@ -54,8 +55,8 @@ void DbMeterApp::run() {
     while (!interrupt_received && isRunning_) {
         // Check for new input
         if (inputHandler_->hasInput()) {
-            int newValue = inputHandler_->readDbValue();
-            if (inputHandler_->isValidDbValue(newValue)) {
+            int newValue = inputHandler_->readIntValue();
+            if (inputHandler_->isValidIntValue(newValue, 0, 120)) {
                 currentDbValue_ = newValue;
             }
         }
@@ -67,7 +68,7 @@ void DbMeterApp::run() {
         display_->update(currentDbValue_, currentBlinkState);
         
         // Sleep based on current dB level
-        int sleepDuration = display_->getBlinkDuration(currentDbValue_);
+        int sleepDuration = DbColorCalculator::getBlinkDuration(currentDbValue_);
         usleep(sleepDuration);
     }
     

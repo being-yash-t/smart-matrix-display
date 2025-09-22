@@ -1,4 +1,5 @@
 #include "db_display.h"
+#include "../features/db_meter/db_color_calculator.h"
 #include <iostream>
 #include <cstring>
 
@@ -21,8 +22,9 @@ void DbDisplay::update(int dbValue, bool blinkState) {
     
     // Draw border if enabled
     if (borderEnabled_) {
-        bool shouldShowBorder = !borderRenderer_.shouldBlink(dbValue) || blinkState;
-        borderRenderer_.drawBorder(offscreen_, dbValue, shouldShowBorder);
+        bool shouldShowBorder = !DbColorCalculator::shouldBlink(dbValue) || blinkState;
+        ColorUtils::Color borderColor = DbColorCalculator::getBorderColor(dbValue);
+        borderRenderer_.drawBorder(offscreen_, borderColor, shouldShowBorder);
     }
     
     // Swap the offscreen canvas with the visible one (double buffering)
@@ -63,8 +65,8 @@ void DbDisplay::drawProgressBar(int dbValue, int componentStartY) {
     int meterWidth = offscreen_->width() - 2 * Config::BORDER_THICKNESS - 2 * Config::PADDING;
     
     // Calculate segment positions (assuming 120dB max)
-    int greenEnd = (Config::YELLOW_THRESHOLD * meterWidth) / Config::MAX_DB_VALUE;
-    int yellowEnd = (Config::RED_THRESHOLD * meterWidth) / Config::MAX_DB_VALUE;
+    int greenEnd = (DbColorCalculator::YELLOW_THRESHOLD * meterWidth) / Config::MAX_DB_VALUE;
+    int yellowEnd = (DbColorCalculator::RED_THRESHOLD * meterWidth) / Config::MAX_DB_VALUE;
     int totalFill = (dbValue * meterWidth) / Config::MAX_DB_VALUE;
     
     // Draw green segment (0-80dB)
@@ -108,9 +110,6 @@ int DbDisplay::getComponentStartY() const {
     return (rows - Config::COMPONENT_HEIGHT) / 2;
 }
 
-int DbDisplay::getBlinkDuration(int dbValue) const {
-    return borderRenderer_.getBlinkDuration(dbValue);
-}
 
 void DbDisplay::enableBorder(bool enable) {
     borderEnabled_ = enable;

@@ -62,16 +62,11 @@ public:
         static const int BORDER_RED_B = 0;
     };
     
-    // dB thresholds
-    static const int YELLOW_THRESHOLD = 80;
-    static const int ORANGE_THRESHOLD = 90;
-    static const int RED_THRESHOLD = 95;
-    
-    // Blink durations (microseconds)
+    // Generic timing constants (microseconds)
     static const int BLINK_DURATION_DEFAULT = 200000;
-    static const int BLINK_DURATION_SLOW = 500000;    // 80-89dB
-    static const int BLINK_DURATION_MEDIUM = 250000;  // 90-94dB
-    static const int BLINK_DURATION_FAST = 100000;    // 95dB+
+    static const int BLINK_DURATION_SLOW = 500000;
+    static const int BLINK_DURATION_MEDIUM = 250000;
+    static const int BLINK_DURATION_FAST = 100000;
 };
 
 #endif // CONFIG_H

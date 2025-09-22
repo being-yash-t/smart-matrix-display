@@ -56,11 +56,14 @@ If you prefer to compile manually:
 g++ -O3 -Wall -pthread -I../../include -I. -o db_meter \
     features/db_meter/main.cc \
     features/db_meter/db_meter_app.cpp \
+    features/db_meter/db_color_calculator.cpp \
     display/db_display.cpp \
+    display/border_renderer.cpp \
     core/input_handler.cpp \
     core/blink_manager.cpp \
     core/config.cpp \
     core/arg_parser.cpp \
+    core/color_utils.cpp \
     ../../lib/librgbmatrix.a -lrt -lm && sudo ./db_meter
 ```
 
@@ -69,17 +72,25 @@ g++ -O3 -Wall -pthread -I../../include -I. -o db_meter \
 ### Organized Structure
 ```
 ├── core/                    # Reusable core components
-│   ├── config.h/.cpp       # Configuration constants
+│   ├── config.h/.cpp       # Generic configuration constants
 │   ├── arg_parser.h/.cpp   # Command line parsing
-│   ├── input_handler.h/.cpp # Input management
-│   └── blink_manager.h/.cpp # Blink state management
+│   ├── input_handler.h/.cpp # Generic input management
+│   ├── blink_manager.h/.cpp # Generic blink state management
+│   └── color_utils.h/.cpp  # Generic color utilities
 │
 ├── display/                 # Display rendering
-│   └── db_display.h/.cpp   # Display engine
+│   ├── border_renderer.h/.cpp # Generic border rendering
+│   ├── db_display.h/.cpp   # dB meter display
+│   └── text_display.h/.cpp # Simple text display
 │
-└── features/db_meter/      # dB Meter application
-    ├── main.cc             # Entry point
-    └── db_meter_app.h/.cpp # Main application class
+└── features/               # Feature applications
+    ├── db_meter/          # dB Meter application
+    │   ├── main.cc        # Entry point
+    │   ├── db_meter_app.h/.cpp # Main application class
+    │   └── db_color_calculator.h/.cpp # dB color logic
+    └── text_demo/         # Text demo application
+        ├── main.cc        # Entry point
+        └── text_demo_app.h/.cpp # Main application class
 ```
 
 ### Build Scripts
