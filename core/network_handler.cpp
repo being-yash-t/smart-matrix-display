@@ -64,6 +64,10 @@ bool NetworkHandler::get(const std::string& url, const std::map<std::string, std
     impl_->lastError_.clear();
     impl_->lastHttpCode_ = 0;
     
+    // Reset CURL options
+    curl_easy_reset(impl_->curl_);
+    impl_->setupDefaultOptions();
+    
     // Set URL
     curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.c_str());
     
@@ -72,6 +76,66 @@ bool NetworkHandler::get(const std::string& url, const std::map<std::string, std
     curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, &response);
     
     // Set headers if provided
+    struct curl_slist* headerList = nullptr;
+    if (!headers.empty()) {
+        for (const auto& header : headers) {
+            std::string headerStr = header.first + ": " + header.second;
+            headerList = curl_slist_append(headerList, headerStr.c_str());
+        }
+        curl_easy_setopt(impl_->curl_, CURLOPT_HTTPHEADER, headerList);
+    }
+    
+    // Perform the request
+    CURLcode res = curl_easy_perform(impl_->curl_);
+    
+    // Clean up headers
+    if (headerList) {
+        curl_slist_free_all(headerList);
+    }
+    
+    if (res != CURLE_OK) {
+        impl_->lastError_ = curl_easy_strerror(res);
+        return false;
+    }
+    
+    // Get HTTP response code
+    curl_easy_getinfo(impl_->curl_, CURLINFO_RESPONSE_CODE, &impl_->lastHttpCode_);
+    
+    // Check for HTTP errors
+    if (impl_->lastHttpCode_ >= 400) {
+        impl_->lastError_ = "HTTP " + std::to_string(impl_->lastHttpCode_);
+        return false;
+    }
+    
+    return true;
+}
+
+bool NetworkHandler::post(const std::string& url, const std::map<std::string, std::string>& headers, const std::string& data, std::string& response) {
+    if (!impl_->curl_) {
+        impl_->lastError_ = "CURL not initialized";
+        return false;
+    }
+    
+    response.clear();
+    impl_->lastError_.clear();
+    impl_->lastHttpCode_ = 0;
+    
+    // Reset CURL options
+    curl_easy_reset(impl_->curl_);
+    impl_->setupDefaultOptions();
+    
+    // Set URL
+    curl_easy_setopt(impl_->curl_, CURLOPT_URL, url.c_str());
+    
+    // Set POST data
+    curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDS, data.c_str());
+    curl_easy_setopt(impl_->curl_, CURLOPT_POSTFIELDSIZE, data.length());
+    
+    // Set write callback
+    curl_easy_setopt(impl_->curl_, CURLOPT_WRITEFUNCTION, Impl::WriteCallback);
+    curl_easy_setopt(impl_->curl_, CURLOPT_WRITEDATA, &response);
+    
+    // Set headers
     struct curl_slist* headerList = nullptr;
     if (!headers.empty()) {
         for (const auto& header : headers) {

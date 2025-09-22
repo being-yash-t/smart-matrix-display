@@ -12,6 +12,7 @@ public:
     // HTTP request methods
     bool get(const std::string& url, std::string& response);
     bool get(const std::string& url, const std::map<std::string, std::string>& headers, std::string& response);
+    bool post(const std::string& url, const std::map<std::string, std::string>& headers, const std::string& data, std::string& response);
     
     // Utility methods
     void setTimeout(int timeoutSeconds);

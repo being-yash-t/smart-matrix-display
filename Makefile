@@ -16,8 +16,11 @@ SOURCES = main.cc main_app.cpp \
           features/db_meter/db_color_calculator.cpp \
           features/youtube_counter/youtube_app.cpp \
           features/youtube_counter/network/youtube_api.cpp \
+          features/spotify_counter/spotify_app.cpp \
+          features/spotify_counter/network/spotify_api.cpp \
           display/db_display.cpp \
           display/youtube_display.cpp \
+          display/spotify_display.cpp \
           display/border_renderer.cpp \
           core/input_handler.cpp \
           core/blink_manager.cpp \

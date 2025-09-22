@@ -36,10 +36,10 @@ fi
 CXX=g++
 CXXFLAGS="-O2 -Wall -pthread"  # -O2 instead of -O3 for faster compilation
 INCLUDES="-I../../include -I."
-LIBS="../../lib/librgbmatrix.a -lrt -lm"
+LIBS="../../lib/librgbmatrix.a -lrt -lm -lcurl"
 
 # Source files (organized modular structure)
-SOURCES="main.cc main_app.cpp features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp features/youtube_counter/youtube_app.cpp display/db_display.cpp display/youtube_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp core/rotating_text.cpp"
+SOURCES="main.cc main_app.cpp features/db_meter/db_meter_app.cpp features/db_meter/db_color_calculator.cpp features/youtube_counter/youtube_app.cpp features/youtube_counter/network/youtube_api.cpp features/spotify_counter/spotify_app.cpp features/spotify_counter/network/spotify_api.cpp display/db_display.cpp display/youtube_display.cpp display/spotify_display.cpp display/border_renderer.cpp core/input_handler.cpp core/blink_manager.cpp core/config.cpp core/arg_parser.cpp core/color_utils.cpp core/rotating_text.cpp core/network_handler.cpp"
 
 # Output executable
 TARGET="led_matrix_apps"
@@ -64,12 +64,12 @@ if [ $? -eq 0 ]; then
         echo -e "${YELLOW}💡 Press Ctrl+C to exit${NC}"
         echo -e "${BLUE}💡 Usage: ${BOLD}./build.sh -r [-b brightness]${NC} ${BLUE}(e.g., -b 8 for 80% brightness)${NC}"
         echo ""
-        sudo ./$TARGET "${@:2}"
+        sudo -E ./$TARGET "${@:2}"
     else
         echo ""
         echo -e "${BLUE}💡 To run:${NC} ${BOLD}sudo ./$TARGET${NC}"
         echo -e "${BLUE}💡 Or use:${NC} ${BOLD}./build.sh -r${NC} ${BLUE}to build and run${NC}"
-        echo -e "${BLUE}💡 Available apps:${NC} ${BOLD}db${NC} ${BLUE}(dB meter),${NC} ${BOLD}youtube${NC} ${BLUE}(subscriber counter)${NC}"
+        echo -e "${BLUE}💡 Available apps:${NC} ${BOLD}db${NC} ${BLUE}(dB meter),${NC} ${BOLD}youtube${NC} ${BLUE}(subscriber counter),${NC} ${BOLD}spotify${NC} ${BLUE}(artist stats)${NC}"
     fi
 else
     echo ""

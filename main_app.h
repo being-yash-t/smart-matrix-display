@@ -7,6 +7,7 @@
 #include "core/input_handler.h"
 #include "features/db_meter/db_meter_app.h"
 #include "features/youtube_counter/youtube_app.h"
+#include "features/spotify_counter/spotify_app.h"
 #include <string>
 
 using namespace rgb_matrix;
@@ -30,6 +31,7 @@ private:
     // Feature apps
     DbMeterApp* dbMeterApp_;
     YoutubeApp* youtubeApp_;
+    SpotifyApp* spotifyApp_;
     
     // State
     bool isRunning_;

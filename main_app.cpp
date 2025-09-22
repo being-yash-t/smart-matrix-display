@@ -11,7 +11,7 @@ static void InterruptHandler(int signo) {
 
 MainApp::MainApp(int argc, char** argv) 
     : matrix_(nullptr), argParser_(nullptr), inputHandler_(nullptr), 
-      dbMeterApp_(nullptr), youtubeApp_(nullptr),
+      dbMeterApp_(nullptr), youtubeApp_(nullptr), spotifyApp_(nullptr),
       isRunning_(false), currentApp_(""), brightnessLevel_(5) {
     
     // Parse command line arguments
@@ -53,6 +53,7 @@ bool MainApp::initialize() {
     // Create feature apps (but don't initialize them yet)
     dbMeterApp_ = new DbMeterApp(matrix_, brightnessLevel_);
     youtubeApp_ = new YoutubeApp(matrix_, brightnessLevel_);
+    spotifyApp_ = new SpotifyApp(matrix_, brightnessLevel_);
     
     isRunning_ = true;
     printMainMenu();
@@ -108,6 +109,15 @@ void MainApp::run() {
                             // Multi-character input - treat as channel ID
                             youtubeApp_->setChannelId(input);
                         }
+                    } else if (currentApp_ == "spotify") {
+                        // Handle Spotify app input (artist ID or commands)
+                        if (input.length() == 1) {
+                            // Single character input - handle as keyboard input
+                            spotifyApp_->handleKeyboardInput(input[0]);
+                        } else {
+                            // Multi-character input - treat as artist ID
+                            spotifyApp_->setArtistId(input);
+                        }
                     }
                 }
             }
@@ -118,6 +128,8 @@ void MainApp::run() {
             dbMeterApp_->update();
         } else if (currentApp_ == "youtube") {
             youtubeApp_->update();
+        } else if (currentApp_ == "spotify") {
+            spotifyApp_->update();
         }
         
         // Small delay
@@ -143,6 +155,11 @@ void MainApp::cleanup() {
     if (youtubeApp_) {
         delete youtubeApp_;
         youtubeApp_ = nullptr;
+    }
+    
+    if (spotifyApp_) {
+        delete spotifyApp_;
+        spotifyApp_ = nullptr;
     }
     
     if (argParser_) {
@@ -181,6 +198,7 @@ void MainApp::printMainMenu() {
     std::cout << "\033[0;32m📋 Available Apps:\033[0m" << std::endl;
     std::cout << "  \033[0;34mdb\033[0m        - dB Level Meter" << std::endl;
     std::cout << "  \033[0;34myoutube\033[0m   - YouTube Subscriber Counter" << std::endl;
+    std::cout << "  \033[0;34mspotify\033[0m   - Spotify Artist Statistics" << std::endl;
     std::cout << "  \033[0;34mquit\033[0m      - Exit application" << std::endl;
     std::cout << std::endl;
     std::cout << "\033[0;32m💡 Type an app name to switch to it:\033[0m" << std::endl;
@@ -191,13 +209,15 @@ void MainApp::handleCommand(const std::string& command) {
         switchToApp("db");
     } else if (command == "youtube" || command == "yt") {
         switchToApp("youtube");
+    } else if (command == "spotify" || command == "sp") {
+        switchToApp("spotify");
     } else if (command == "back" || command == "menu") {
         cleanupCurrentApp();
         currentApp_ = "";
         printMainMenu();
     } else {
         std::cout << "\033[0;31m❌ Unknown command: " << command << "\033[0m" << std::endl;
-        std::cout << "\033[0;32m💡 Available commands: db, youtube, back, quit\033[0m" << std::endl;
+        std::cout << "\033[0;32m💡 Available commands: db, youtube, spotify, back, quit\033[0m" << std::endl;
     }
 }
 
@@ -217,6 +237,14 @@ void MainApp::switchToApp(const std::string& appName) {
             std::cerr << "\033[0;31m❌ Failed to initialize YouTube Counter app\033[0m" << std::endl;
             currentApp_ = "";
         }
+    } else if (appName == "spotify") {
+        std::cout << "\033[1;36m🎵 Switching to Spotify Counter...\033[0m" << std::endl;
+        if (!spotifyApp_->initialize()) {
+            std::cerr << "\033[0;31m❌ Failed to initialize Spotify Counter app\033[0m" << std::endl;
+            currentApp_ = "";
+        }
+    } else {
+        std::cout << "\033[0;31m❌ Unknown app: " << appName << "\033[0m" << std::endl;
     }
 }
 
@@ -225,5 +253,7 @@ void MainApp::cleanupCurrentApp() {
         // Cleanup dB meter app if needed
     } else if (currentApp_ == "youtube") {
         // Cleanup YouTube app if needed
+    } else if (currentApp_ == "spotify") {
+        // Cleanup Spotify app if needed
     }
 }
