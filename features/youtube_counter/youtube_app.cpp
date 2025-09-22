@@ -45,7 +45,6 @@ void YoutubeApp::cleanup() {
         display_ = nullptr;
     }
     
-    
     isRunning_ = false;
 }
 

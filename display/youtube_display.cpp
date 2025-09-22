@@ -128,12 +128,6 @@ void YoutubeDisplay::drawSubscriberCount(int subscriberCount, int centerX, int s
     rgb_matrix::DrawText(offscreen_, largeFont_, textX, startY + largeFont_.height(), textColor, formattedNumber.c_str());
 }
 
-int YoutubeDisplay::getComponentStartY() const {
-    int rows = offscreen_->height();
-    int componentHeight = 40; // Approximate height of all components
-    return (rows - componentHeight) / 2;
-}
-
 void YoutubeDisplay::setBrightness(int brightnessLevel) {
     if (brightnessLevel >= Config::MIN_BRIGHTNESS && brightnessLevel <= Config::MAX_BRIGHTNESS) {
         brightnessLevel_ = brightnessLevel;

@@ -60,7 +60,6 @@ void DbMeterApp::cleanup() {
         display_ = nullptr;
     }
     
-    
     if (blinkManager_) {
         delete blinkManager_;
         blinkManager_ = nullptr;
@@ -82,7 +81,6 @@ void DbMeterApp::setBrightness(int brightnessLevel) {
         }
     }
 }
-
 
 void DbMeterApp::printStartupInfo() {
     std::cout << "\033[1;36m🎵 dB Meter Application - Audio Level Monitor\033[0m" << std::endl;

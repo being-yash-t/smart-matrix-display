@@ -27,7 +27,6 @@ private:
     void drawSubscriberCount(int subscriberCount, int centerX, int startY);
     
     // Helper methods
-    int getComponentStartY() const;
     int scaleBrightness(int color) const;
     void loadFonts();
     std::string formatNumber(int number) const;
