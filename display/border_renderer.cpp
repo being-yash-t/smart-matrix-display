@@ -58,25 +58,71 @@ int BorderRenderer::getThickness() const {
 }
 
 void BorderRenderer::getBorderColor(int dbValue, int& r, int& g, int& b) const {
-    // Default grey (below 80dB)
-    r = Config::Colors::BORDER_GREY_R;
-    g = Config::Colors::BORDER_GREY_G;
-    b = Config::Colors::BORDER_GREY_B;
+    // Define transition zones (5dB before each threshold)
+    const int GREEN_TO_YELLOW_START = Config::YELLOW_THRESHOLD - 5;  // 75dB
+    const int YELLOW_TO_ORANGE_START = Config::ORANGE_THRESHOLD - 5; // 85dB  
+    const int ORANGE_TO_RED_START = Config::RED_THRESHOLD - 5;       // 90dB
     
-    if (dbValue >= Config::YELLOW_THRESHOLD && dbValue < Config::ORANGE_THRESHOLD) {
-        // Yellow (80-89dB)
+    if (dbValue < GREEN_TO_YELLOW_START) {
+        // Pure grey (below 75dB)
+        r = Config::Colors::BORDER_GREY_R;
+        g = Config::Colors::BORDER_GREY_G;
+        b = Config::Colors::BORDER_GREY_B;
+        
+    } else if (dbValue < Config::YELLOW_THRESHOLD) {
+        // Transition from grey to yellow (75-79dB)
+        float ratio = (float)(dbValue - GREEN_TO_YELLOW_START) / 5.0f;
+        blendColors(Config::Colors::BORDER_GREY_R, Config::Colors::BORDER_GREY_G, Config::Colors::BORDER_GREY_B,
+                   Config::Colors::BORDER_YELLOW_R, Config::Colors::BORDER_YELLOW_G, Config::Colors::BORDER_YELLOW_B,
+                   ratio, r, g, b);
+                   
+    } else if (dbValue < YELLOW_TO_ORANGE_START) {
+        // Pure yellow (80-84dB)
         r = Config::Colors::BORDER_YELLOW_R;
         g = Config::Colors::BORDER_YELLOW_G;
         b = Config::Colors::BORDER_YELLOW_B;
-    } else if (dbValue >= Config::ORANGE_THRESHOLD && dbValue < Config::RED_THRESHOLD) {
-        // Orange (90-94dB)
+        
+    } else if (dbValue < Config::ORANGE_THRESHOLD) {
+        // Transition from yellow to orange (85-89dB)
+        float ratio = (float)(dbValue - YELLOW_TO_ORANGE_START) / 5.0f;
+        blendColors(Config::Colors::BORDER_YELLOW_R, Config::Colors::BORDER_YELLOW_G, Config::Colors::BORDER_YELLOW_B,
+                   Config::Colors::BORDER_ORANGE_R, Config::Colors::BORDER_ORANGE_G, Config::Colors::BORDER_ORANGE_B,
+                   ratio, r, g, b);
+                   
+    } else if (dbValue < ORANGE_TO_RED_START) {
+        // Pure orange (90-89dB)
         r = Config::Colors::BORDER_ORANGE_R;
         g = Config::Colors::BORDER_ORANGE_G;
         b = Config::Colors::BORDER_ORANGE_B;
-    } else if (dbValue >= Config::RED_THRESHOLD) {
-        // Red (95dB+)
+        
+    } else if (dbValue < Config::RED_THRESHOLD) {
+        // Transition from orange to red (90-94dB)
+        float ratio = (float)(dbValue - ORANGE_TO_RED_START) / 5.0f;
+        blendColors(Config::Colors::BORDER_ORANGE_R, Config::Colors::BORDER_ORANGE_G, Config::Colors::BORDER_ORANGE_B,
+                   Config::Colors::BORDER_RED_R, Config::Colors::BORDER_RED_G, Config::Colors::BORDER_RED_B,
+                   ratio, r, g, b);
+                   
+    } else {
+        // Pure red (95dB+)
         r = Config::Colors::BORDER_RED_R;
         g = Config::Colors::BORDER_RED_G;
         b = Config::Colors::BORDER_RED_B;
     }
+}
+
+void BorderRenderer::blendColors(int r1, int g1, int b1, int r2, int g2, int b2, 
+                                float ratio, int& outR, int& outG, int& outB) const {
+    // Clamp ratio between 0.0 and 1.0
+    if (ratio < 0.0f) ratio = 0.0f;
+    if (ratio > 1.0f) ratio = 1.0f;
+    
+    // Linear interpolation between two colors
+    outR = (int)(r1 + (r2 - r1) * ratio);
+    outG = (int)(g1 + (g2 - g1) * ratio);
+    outB = (int)(b1 + (b2 - b1) * ratio);
+    
+    // Clamp values to valid RGB range (0-255)
+    if (outR < 0) outR = 0; if (outR > 255) outR = 255;
+    if (outG < 0) outG = 0; if (outG > 255) outG = 255;
+    if (outB < 0) outB = 0; if (outB > 255) outB = 255;
 }

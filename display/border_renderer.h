@@ -26,6 +26,8 @@ public:
 private:
     // Helper methods
     void getBorderColor(int dbValue, int& r, int& g, int& b) const;
+    void blendColors(int r1, int g1, int b1, int r2, int g2, int b2, 
+                     float ratio, int& outR, int& outG, int& outB) const;
     
     // Member variables
     int borderThickness_;
